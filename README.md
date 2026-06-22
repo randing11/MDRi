@@ -1,6 +1,7 @@
 # MDRi Explorer
 
-MDRi is a minimal pan-cancer myeloid damage-response scoring framework.
+MDRi is a single-cell-informed pan-cancer myeloid damage-response scoring
+framework with a companion Shiny explorer.
 
 It computes four scores from transcriptomic data:
 
@@ -56,6 +57,32 @@ expression and PanCanAtlas survival tables:
 - Median-split KM summary results.
 - Example bulk expression and clinical files.
 
+## Benchmark Module
+
+The repository includes pan-cancer benchmark analyses comparing MDRi with
+conventional immune infiltration estimates from TIMER, MCPcounter, xCell,
+CIBERSORT, quanTIseq and EPIC.
+
+Included benchmark files:
+
+- `inst/extdata/benchmark/MDRi_infiltration_spearman_correlations.csv`
+- `inst/extdata/benchmark/MDRi_infiltration_panTCGA_univariate_Cox.csv`
+- `inst/extdata/benchmark/MDRi_multivariable_adjusted_for_benchmark_infiltration.csv`
+- `inst/extdata/benchmark/benchmark_summary.txt`
+
+The reproducible benchmark workflow is provided in:
+
+- `inst/scripts/benchmark_tcga_infiltration.R`
+
+Run it with:
+
+```r
+Rscript inst/scripts/benchmark_tcga_infiltration.R infiltration_estimation_for_tcga.csv.gz
+```
+
+The large merged TCGA infiltration table is intentionally not bundled to keep
+the repository lightweight.
+
 ## Main Functions
 
 The core functions live in `R/mdri_core.R`:
@@ -70,7 +97,8 @@ The core functions live in `R/mdri_core.R`:
 
 ## Current Status
 
-This is an MVP for manuscript packaging and interactive exploration. A fuller
-methods-paper version should add benchmark modules against immune deconvolution
-tools such as ESTIMATE, xCell, MCPcounter, CIBERSORT and published TAM
-signatures.
+This is an MVP for manuscript packaging and interactive exploration. It includes
+MDRi scoring, TCGA reference visualization, clinical survival analysis, and a
+benchmark module against conventional immune infiltration estimates. A fuller
+methods-paper version can further add external cohort benchmarking, time-dependent
+AUC/C-index comparisons, and published TAM signature collections.

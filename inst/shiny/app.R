@@ -3,6 +3,7 @@ suppressPackageStartupMessages({
   library(bslib)
   library(DT)
   library(ggplot2)
+  library(dplyr)
   library(survival)
 })
 
@@ -19,6 +20,18 @@ source(file.path(root_dir, "R", "mdri_core.R"))
 ext_dir <- file.path(root_dir, "inst", "extdata")
 ref_path <- file.path(ext_dir, "tcga_mdri_reference.rds")
 reference <- if (file.exists(ref_path)) readRDS(ref_path) else NULL
+benchmark_dir <- file.path(ext_dir, "benchmark")
+benchmark <- list(
+  summary = file.path(benchmark_dir, "benchmark_summary.txt"),
+  cor = file.path(benchmark_dir, "MDRi_infiltration_spearman_correlations.csv"),
+  cox = file.path(benchmark_dir, "MDRi_infiltration_panTCGA_univariate_Cox.csv"),
+  multi = file.path(benchmark_dir, "MDRi_multivariable_adjusted_for_benchmark_infiltration.csv")
+)
+benchmark <- lapply(benchmark, function(path) {
+  if (!file.exists(path)) return(NULL)
+  if (grepl("\\.txt$", path)) return(readLines(path, warn = FALSE))
+  read.csv(path, check.names = FALSE)
+})
 
 score_cols <- c("MDR_injury", "MDR_resolution", "MDR_apc_ifn", "MDR_axis")
 
@@ -29,7 +42,7 @@ ui <- page_navbar(
   nav_panel(
     "Overview",
     layout_columns(
-      col_widths = c(5, 7),
+      col_widths = c(4, 4, 4),
       card(
         card_header("MDRi framework"),
         tags$p("MDRi quantifies pan-cancer myeloid damage-response states from bulk or single-cell-derived expression matrices."),
@@ -40,6 +53,11 @@ ui <- page_navbar(
           tags$li(tags$b("MDR axis:"), " injury minus resolution.")
         ),
         tags$p("MVP version: upload expression, compute MDRi scores, compare with TCGA reference, and run survival analysis when clinical data are available.")
+      ),
+      card(
+        card_header("Benchmark support"),
+        tags$p("The packaged reference includes benchmark analyses against conventional immune infiltration estimates, including TIMER, MCPcounter, xCell, CIBERSORT, quanTIseq and EPIC."),
+        tags$p("Benchmark results are available in the Benchmark tab and can be regenerated from inst/scripts/benchmark_tcga_infiltration.R.")
       ),
       card(
         card_header("Built-in reference"),
@@ -108,6 +126,27 @@ ui <- page_navbar(
   ),
 
   nav_panel(
+    "Benchmark",
+    layout_columns(
+      col_widths = c(4, 8),
+      card(
+        card_header("Benchmark summary"),
+        verbatimTextOutput("benchmark_summary")
+      ),
+      card(
+        card_header("MDRi versus infiltration estimates"),
+        plotOutput("benchmark_cor_plot", height = "520px")
+      )
+    ),
+    layout_columns(
+      col_widths = c(6, 6),
+      card(card_header("Nominally significant Cox tests"), plotOutput("benchmark_count_plot", height = "460px")),
+      card(card_header("MDRi adjusted Cox table"), DTOutput("benchmark_multi_table"))
+    ),
+    card(card_header("Benchmark Cox result table"), DTOutput("benchmark_cox_table"))
+  ),
+
+  nav_panel(
     "Downloads",
     card(
       card_header("Files included in this MDRi MVP"),
@@ -134,6 +173,66 @@ server <- function(input, output, session) {
       "\nCreated:", reference$created,
       "\nNote:", reference$note
     )
+  })
+
+  output$benchmark_summary <- renderText({
+    if (is.null(benchmark$summary)) {
+      return("No benchmark summary file was found.")
+    }
+    paste(benchmark$summary, collapse = "\n")
+  })
+
+  output$benchmark_cor_plot <- renderPlot({
+    req(benchmark$cor)
+    x <- benchmark$cor
+    x$mdri_label <- factor(x$mdri_label, levels = unique(x$mdri_label))
+    x$benchmark_label <- factor(x$benchmark_label, levels = rev(unique(x$benchmark_label)))
+    ggplot(x, aes(mdri_label, benchmark_label, fill = rho)) +
+      geom_tile(color = "white", linewidth = 0.25) +
+      geom_text(aes(label = sprintf("%.2f", rho)), size = 2.2) +
+      scale_fill_gradient2(low = "#2b6cb0", mid = "white", high = "#b2182b", midpoint = 0, limits = c(-1, 1)) +
+      labs(x = NULL, y = NULL, fill = "Spearman rho") +
+      theme_classic(base_size = 9) +
+      theme(axis.line = element_blank(), axis.ticks = element_blank())
+  })
+
+  output$benchmark_count_plot <- renderPlot({
+    req(benchmark$cox)
+    x <- benchmark$cox
+    x <- x[is.finite(x$p) & x$p < 0.05, , drop = FALSE]
+    if (nrow(x) == 0) return(NULL)
+    count_df <- x |>
+      group_by(feature_label, class, direction) |>
+      summarise(n_significant = n(), .groups = "drop") |>
+      mutate(n_plot = ifelse(direction == "Protective", -n_significant, n_significant))
+    order_df <- count_df |>
+      group_by(feature_label, class) |>
+      summarise(total = sum(abs(n_plot)), .groups = "drop") |>
+      arrange(desc(class == "MDRi"), desc(total))
+    count_df$feature_label <- factor(count_df$feature_label, levels = rev(unique(order_df$feature_label)))
+    ggplot(count_df, aes(feature_label, n_plot, fill = direction)) +
+      geom_col(width = 0.72, color = "white", linewidth = 0.15) +
+      coord_flip() +
+      geom_hline(yintercept = 0, color = "black", linewidth = 0.25) +
+      scale_fill_manual(values = c(Adverse = "#b2182b", Protective = "#2b6cb0")) +
+      scale_y_continuous(labels = abs) +
+      labs(x = NULL, y = "Significant cancer-endpoint Cox tests", fill = NULL) +
+      theme_classic(base_size = 9) +
+      theme(legend.position = "top")
+  })
+
+  output$benchmark_multi_table <- renderDT({
+    req(benchmark$multi)
+    x <- benchmark$multi
+    x <- x[order(x$p), c("cancer", "endpoint", "feature_label", "n", "events", "HR", "lower95", "upper95", "p"), drop = FALSE]
+    datatable(x, options = list(pageLength = 10, scrollX = TRUE))
+  })
+
+  output$benchmark_cox_table <- renderDT({
+    req(benchmark$cox)
+    x <- benchmark$cox
+    x <- x[order(x$p), c("class", "feature_label", "cancer", "endpoint", "n", "events", "HR", "lower95", "upper95", "p", "c_index"), drop = FALSE]
+    datatable(x, options = list(pageLength = 15, scrollX = TRUE))
   })
 
   expression_matrix <- eventReactive(input$run_score, {

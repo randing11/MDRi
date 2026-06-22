@@ -1,0 +1,153 @@
+"mdri","benchmark","rho","p","mdri_label","benchmark_label"
+"MDR_injury","Macrophage_TIMER",0.176405710976054,3.77114980583853e-69,"MDR injury","Macrophage
+TIMER"
+"MDR_resolution","Macrophage_TIMER",0.367598622734216,1.93251104774925e-310,"MDR resolution","Macrophage
+TIMER"
+"MDR_apc_ifn","Macrophage_TIMER",0.13799093334103,9.32895771047288e-43,"MDR APC/IFN","Macrophage
+TIMER"
+"MDR_axis","Macrophage_TIMER",-0.200079229176909,8.1631010647728e-89,"MDR axis","Macrophage
+TIMER"
+"MDR_injury","Macrophage/Monocyte_MCPCOUNTER",0.334794584155741,1.31420990673803e-254,"MDR injury","Mac/Mono
+MCPcounter"
+"MDR_resolution","Macrophage/Monocyte_MCPCOUNTER",0.65802424246664,0,"MDR resolution","Mac/Mono
+MCPcounter"
+"MDR_apc_ifn","Macrophage/Monocyte_MCPCOUNTER",0.473491252602281,0,"MDR APC/IFN","Mac/Mono
+MCPcounter"
+"MDR_axis","Macrophage/Monocyte_MCPCOUNTER",-0.352510133789388,6.25735922382287e-284,"MDR axis","Mac/Mono
+MCPcounter"
+"MDR_injury","Monocyte_MCPCOUNTER",0.334794584155741,1.31420990673803e-254,"MDR injury","Monocyte
+MCPcounter"
+"MDR_resolution","Monocyte_MCPCOUNTER",0.65802424246664,0,"MDR resolution","Monocyte
+MCPcounter"
+"MDR_apc_ifn","Monocyte_MCPCOUNTER",0.473491252602281,0,"MDR APC/IFN","Monocyte
+MCPcounter"
+"MDR_axis","Monocyte_MCPCOUNTER",-0.352510133789388,6.25735922382287e-284,"MDR axis","Monocyte
+MCPcounter"
+"MDR_injury","Myeloid dendritic cell_MCPCOUNTER",0.438530446794627,0,"MDR injury","myDC
+MCPcounter"
+"MDR_resolution","Myeloid dendritic cell_MCPCOUNTER",0.530114333665234,0,"MDR resolution","myDC
+MCPcounter"
+"MDR_apc_ifn","Myeloid dendritic cell_MCPCOUNTER",0.589436930927277,0,"MDR APC/IFN","myDC
+MCPcounter"
+"MDR_axis","Myeloid dendritic cell_MCPCOUNTER",-0.0951536392596267,4.20303862591154e-21,"MDR axis","myDC
+MCPcounter"
+"MDR_injury","Macrophage_XCELL",0.383042760887236,0,"MDR injury","Macrophage
+xCell"
+"MDR_resolution","Macrophage_XCELL",0.627144641902813,0,"MDR resolution","Macrophage
+xCell"
+"MDR_apc_ifn","Macrophage_XCELL",0.522323114702423,0,"MDR APC/IFN","Macrophage
+xCell"
+"MDR_axis","Macrophage_XCELL",-0.239799297221403,7.19029384847111e-128,"MDR axis","Macrophage
+xCell"
+"MDR_injury","Macrophage M1_XCELL",0.391723172251183,0,"MDR injury","M1 macrophage
+xCell"
+"MDR_resolution","Macrophage M1_XCELL",0.567450215949072,0,"MDR resolution","M1 macrophage
+xCell"
+"MDR_apc_ifn","Macrophage M1_XCELL",0.505917572691136,0,"MDR APC/IFN","M1 macrophage
+xCell"
+"MDR_axis","Macrophage M1_XCELL",-0.165380998556683,6.93236781733237e-61,"MDR axis","M1 macrophage
+xCell"
+"MDR_injury","Macrophage M2_XCELL",0.196402711824994,1.37891816400007e-85,"MDR injury","M2 macrophage
+xCell"
+"MDR_resolution","Macrophage M2_XCELL",0.503908520818224,0,"MDR resolution","M2 macrophage
+xCell"
+"MDR_apc_ifn","Macrophage M2_XCELL",0.387664064884516,0,"MDR APC/IFN","M2 macrophage
+xCell"
+"MDR_axis","Macrophage M2_XCELL",-0.321959069787382,1.53576773304953e-234,"MDR axis","M2 macrophage
+xCell"
+"MDR_injury","Monocyte_XCELL",0.539967500699417,0,"MDR injury","Monocyte
+xCell"
+"MDR_resolution","Monocyte_XCELL",0.612955115877729,0,"MDR resolution","Monocyte
+xCell"
+"MDR_apc_ifn","Monocyte_XCELL",0.475482921043039,0,"MDR APC/IFN","Monocyte
+xCell"
+"MDR_axis","Monocyte_XCELL",-0.0903560391395636,3.55202130767437e-19,"MDR axis","Monocyte
+xCell"
+"MDR_injury","Myeloid dendritic cell_XCELL",0.476245620682133,0,"MDR injury","myDC
+xCell"
+"MDR_resolution","Myeloid dendritic cell_XCELL",0.423934041076679,0,"MDR resolution","myDC
+xCell"
+"MDR_apc_ifn","Myeloid dendritic cell_XCELL",0.569445709816671,0,"MDR APC/IFN","myDC
+xCell"
+"MDR_axis","Myeloid dendritic cell_XCELL",0.0573318655791714,1.41163244506168e-08,"MDR axis","myDC
+xCell"
+"MDR_injury","immune score_XCELL",0.454473889347358,0,"MDR injury","Immune score
+xCell"
+"MDR_resolution","immune score_XCELL",0.558543806237926,0,"MDR resolution","Immune score
+xCell"
+"MDR_apc_ifn","immune score_XCELL",0.663318183782023,0,"MDR APC/IFN","Immune score
+xCell"
+"MDR_axis","immune score_XCELL",-0.0989221333784518,1.09733263859283e-22,"MDR axis","Immune score
+xCell"
+"MDR_injury","stroma score_XCELL",0.0980832674323102,2.5007860706704e-22,"MDR injury","Stroma score
+xCell"
+"MDR_resolution","stroma score_XCELL",0.400419073535121,0,"MDR resolution","Stroma score
+xCell"
+"MDR_apc_ifn","stroma score_XCELL",0.138522482595221,4.46905577567568e-43,"MDR APC/IFN","Stroma score
+xCell"
+"MDR_axis","stroma score_XCELL",-0.324014111476213,1.09286559878757e-237,"MDR axis","Stroma score
+xCell"
+"MDR_injury","microenvironment score_XCELL",0.394642558570691,0,"MDR injury","Microenv score
+xCell"
+"MDR_resolution","microenvironment score_XCELL",0.660841579593423,0,"MDR resolution","Microenv score
+xCell"
+"MDR_apc_ifn","microenvironment score_XCELL",0.623102827959857,0,"MDR APC/IFN","Microenv score
+xCell"
+"MDR_axis","microenvironment score_XCELL",-0.274023449552617,6.81200654067358e-168,"MDR axis","Microenv score
+xCell"
+"MDR_injury","Macrophage_EPIC",0.246639486873923,2.18809623549469e-135,"MDR injury","Macrophage
+EPIC"
+"MDR_resolution","Macrophage_EPIC",0.691044974693507,0,"MDR resolution","Macrophage
+EPIC"
+"MDR_apc_ifn","Macrophage_EPIC",0.462451115895122,0,"MDR APC/IFN","Macrophage
+EPIC"
+"MDR_axis","Macrophage_EPIC",-0.474680078886766,0,"MDR axis","Macrophage
+EPIC"
+"MDR_injury","Macrophage M1_QUANTISEQ",0.704334482491481,0,"MDR injury","M1 macrophage
+quanTIseq"
+"MDR_resolution","Macrophage M1_QUANTISEQ",0.411330970127789,0,"MDR resolution","M1 macrophage
+quanTIseq"
+"MDR_apc_ifn","Macrophage M1_QUANTISEQ",0.575303382138567,0,"MDR APC/IFN","M1 macrophage
+quanTIseq"
+"MDR_axis","Macrophage M1_QUANTISEQ",0.292490167324706,4.64282222412322e-192,"MDR axis","M1 macrophage
+quanTIseq"
+"MDR_injury","Macrophage M2_QUANTISEQ",0.223491741120004,6.74946550633937e-111,"MDR injury","M2 macrophage
+quanTIseq"
+"MDR_resolution","Macrophage M2_QUANTISEQ",0.550584265877868,0,"MDR resolution","M2 macrophage
+quanTIseq"
+"MDR_apc_ifn","Macrophage M2_QUANTISEQ",0.439201297607243,0,"MDR APC/IFN","M2 macrophage
+quanTIseq"
+"MDR_axis","Macrophage M2_QUANTISEQ",-0.320174851400225,7.93050270122957e-232,"MDR axis","M2 macrophage
+quanTIseq"
+"MDR_injury","Monocyte_QUANTISEQ",-0.236355387840972,3.56259307660248e-124,"MDR injury","Monocyte
+quanTIseq"
+"MDR_resolution","Monocyte_QUANTISEQ",8.35276930893623e-05,0.993412111606646,"MDR resolution","Monocyte
+quanTIseq"
+"MDR_apc_ifn","Monocyte_QUANTISEQ",-0.165481393907109,5.86342469659539e-61,"MDR APC/IFN","Monocyte
+quanTIseq"
+"MDR_axis","Monocyte_QUANTISEQ",-0.238883023402947,7.00905235320717e-127,"MDR axis","Monocyte
+quanTIseq"
+"MDR_injury","Macrophage M0_CIBERSORT",0.34066863718213,4.0524581039416e-264,"MDR injury","M0 macrophage
+CIBERSORT"
+"MDR_resolution","Macrophage M0_CIBERSORT",-0.0664146923284346,4.95076600866142e-11,"MDR resolution","M0 macrophage
+CIBERSORT"
+"MDR_apc_ifn","Macrophage M0_CIBERSORT",0.0194975752863817,0.0539128615521338,"MDR APC/IFN","M0 macrophage
+CIBERSORT"
+"MDR_axis","Macrophage M0_CIBERSORT",0.426440122338835,0,"MDR axis","M0 macrophage
+CIBERSORT"
+"MDR_injury","Macrophage M1_CIBERSORT",0.275963768157641,2.40166482121576e-170,"MDR injury","M1 macrophage
+CIBERSORT"
+"MDR_resolution","Macrophage M1_CIBERSORT",0.162140329304051,1.45783492907277e-58,"MDR resolution","M1 macrophage
+CIBERSORT"
+"MDR_apc_ifn","Macrophage M1_CIBERSORT",0.526761520510012,0,"MDR APC/IFN","M1 macrophage
+CIBERSORT"
+"MDR_axis","Macrophage M1_CIBERSORT",0.120335020178552,7.44405073815342e-33,"MDR axis","M1 macrophage
+CIBERSORT"
+"MDR_injury","Macrophage M2_CIBERSORT",0.0134242799595044,0.184488200998251,"MDR injury","M2 macrophage
+CIBERSORT"
+"MDR_resolution","Macrophage M2_CIBERSORT",0.401005146950708,0,"MDR resolution","M2 macrophage
+CIBERSORT"
+"MDR_apc_ifn","Macrophage M2_CIBERSORT",0.00189919589895324,0.85108251904896,"MDR APC/IFN","M2 macrophage
+CIBERSORT"
+"MDR_axis","Macrophage M2_CIBERSORT",-0.407561570337482,0,"MDR axis","M2 macrophage
+CIBERSORT"

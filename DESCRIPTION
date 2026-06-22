@@ -12,4 +12,5 @@ Imports:
     bslib,
     DT,
     ggplot2,
+    dplyr,
     survival
