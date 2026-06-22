@@ -1,0 +1,15 @@
+Package: MDRi
+Type: Package
+Title: Myeloid Damage-Response Index Explorer
+Version: 0.1.0
+Authors@R: person("MDRi", "Team", role = c("aut", "cre"), email = "example@example.com")
+Description: A minimal pan-cancer myeloid damage-response scoring framework and Shiny explorer.
+License: MIT
+Encoding: UTF-8
+Depends: R (>= 4.2.0)
+Imports:
+    shiny,
+    bslib,
+    DT,
+    ggplot2,
+    survival

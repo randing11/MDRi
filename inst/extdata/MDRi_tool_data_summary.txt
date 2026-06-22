@@ -1,0 +1,8 @@
+MDRi tool data
+Created: 2026-06-22 19:39:09
+TCGA reference samples: 10547
+Cancer types: ACC, BLCA, BRCA, CESC, CHOL, COAD, DLBC, ESCA, GBM, HNSC, KICH, KIRC, KIRP, LGG, LIHC, LUAD, LUSC, MESO, OV, PAAD, PCPG, PRAD, READ, SARC, SKCM, STAD, TGCT, THCA, THYM, UCEC, UCS, UVM
+Cox rows: 380
+KM rows: 120
+Example expression genes: 45
+Example expression samples: 60
