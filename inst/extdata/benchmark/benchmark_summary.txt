@@ -2,3 +2,8 @@ Merged samples: 9783
 Cancers: ACC, BLCA, BRCA, CESC, CHOL, COAD, DLBC, ESCA, GBM, HNSC, KICH, KIRC, KIRP, LGG, LIHC, LUAD, LUSC, MESO, OV, PAAD, PCPG, PRAD, READ, SARC, SKCM, STAD, TGCT, THCA, THYM, UCEC, UCS, UVM
 Benchmark features: Macrophage_TIMER; Macrophage/Monocyte_MCPCOUNTER; Monocyte_MCPCOUNTER; Myeloid dendritic cell_MCPCOUNTER; Macrophage_XCELL; Macrophage M1_XCELL; Macrophage M2_XCELL; Monocyte_XCELL; Myeloid dendritic cell_XCELL; immune score_XCELL; stroma score_XCELL; microenvironment score_XCELL; Macrophage_EPIC; Macrophage M1_QUANTISEQ; Macrophage M2_QUANTISEQ; Monocyte_QUANTISEQ; Macrophage M0_CIBERSORT; Macrophage M1_CIBERSORT; Macrophage M2_CIBERSORT
 Adjusters in multivariable Cox: Macrophage/Monocyte_MCPCOUNTER; Macrophage_TIMER; immune score_XCELL
+Published TAM signatures: C1QC+ TAM (17 genes); SPP1+ TAM (15 genes)
+Published TAM signature source: Li et al., Frontiers in Immunology 2021, doi:10.3389/fimmu.2021.694801
+TCGA primary tumors with TAM scores: 9164
+MDRi models adjusted for both TAM signatures, age, ABSOLUTE purity, CD8 MCPcounter, and stage where estimable: 392
+Endpoint-FDR significant adjusted MDRi models: 12

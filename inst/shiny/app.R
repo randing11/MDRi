@@ -7,6 +7,8 @@ suppressPackageStartupMessages({
   library(survival)
 })
 
+options(shiny.maxRequestSize = 2048 * 1024^2)
+
 `%||%` <- function(x, y) if (is.null(x)) y else x
 
 app_dir <- normalizePath(getwd(), mustWork = FALSE)
@@ -25,11 +27,16 @@ benchmark <- list(
   summary = file.path(benchmark_dir, "benchmark_summary.txt"),
   cor = file.path(benchmark_dir, "MDRi_infiltration_spearman_correlations.csv"),
   cox = file.path(benchmark_dir, "MDRi_infiltration_panTCGA_univariate_Cox.csv"),
-  multi = file.path(benchmark_dir, "MDRi_multivariable_adjusted_for_benchmark_infiltration.csv")
+  multi = file.path(benchmark_dir, "MDRi_multivariable_adjusted_for_benchmark_infiltration.csv"),
+  tam_cor = file.path(benchmark_dir, "MDRi_published_TAM_signature_global_correlations.tsv"),
+  tam_cox = file.path(benchmark_dir, "published_TAM_signature_panTCGA_univariate_Cox.tsv"),
+  tam_multi = file.path(benchmark_dir, "MDRi_Cox_adjusted_for_TAM_age_stage_purity_CD8.tsv"),
+  tam_genes = file.path(benchmark_dir, "published_TAM_signature_gene_sets.tsv")
 )
 benchmark <- lapply(benchmark, function(path) {
   if (!file.exists(path)) return(NULL)
   if (grepl("\\.txt$", path)) return(readLines(path, warn = FALSE))
+  if (grepl("\\.tsv$", path)) return(read.delim(path, check.names = FALSE))
   read.csv(path, check.names = FALSE)
 })
 
@@ -56,7 +63,7 @@ ui <- page_navbar(
       ),
       card(
         card_header("Benchmark support"),
-        tags$p("The packaged reference includes benchmark analyses against conventional immune infiltration estimates, including TIMER, MCPcounter, xCell, CIBERSORT, quanTIseq and EPIC."),
+        tags$p("The packaged reference includes benchmark analyses against TIMER, MCPcounter, xCell, CIBERSORT, quanTIseq, EPIC and published C1QC+ and SPP1+ TAM signatures."),
         tags$p("Benchmark results are available in the Benchmark tab and can be regenerated from inst/scripts/benchmark_tcga_infiltration.R.")
       ),
       card(
@@ -70,8 +77,14 @@ ui <- page_navbar(
     "Score Data",
     layout_sidebar(
       sidebar = sidebar(
-        fileInput("expr_file", "Expression matrix TSV/CSV", accept = c(".tsv", ".txt", ".csv")),
+        fileInput(
+          "expr_file",
+          "Expression data",
+          accept = c(".tsv", ".txt", ".csv", ".rds", ".h5ad")
+        ),
         checkboxInput("use_example", "Use built-in example expression", TRUE),
+        textInput("input_assay", "Assay (optional)", value = ""),
+        textInput("input_layer", "Layer (optional)", value = ""),
         selectInput("score_method", "Scoring method", choices = c("zscore", "log2_zscore"), selected = "zscore"),
         actionButton("run_score", "Run MDRi scoring", class = "btn-primary"),
         hr(),
@@ -143,7 +156,17 @@ ui <- page_navbar(
       card(card_header("Nominally significant Cox tests"), plotOutput("benchmark_count_plot", height = "460px")),
       card(card_header("MDRi adjusted Cox table"), DTOutput("benchmark_multi_table"))
     ),
-    card(card_header("Benchmark Cox result table"), DTOutput("benchmark_cox_table"))
+    card(card_header("Benchmark Cox result table"), DTOutput("benchmark_cox_table")),
+    layout_columns(
+      col_widths = c(5, 7),
+      card(card_header("Published TAM signature correlations"), plotOutput("tam_cor_plot", height = "330px")),
+      card(card_header("Endpoint-FDR significant models"), plotOutput("tam_count_plot", height = "330px"))
+    ),
+    layout_columns(
+      col_widths = c(5, 7),
+      card(card_header("Published TAM gene sets"), DTOutput("tam_gene_table")),
+      card(card_header("MDRi adjusted for TAM and clinical covariates"), DTOutput("tam_multi_table"))
+    )
   ),
 
   nav_panel(
@@ -235,20 +258,84 @@ server <- function(input, output, session) {
     datatable(x, options = list(pageLength = 15, scrollX = TRUE))
   })
 
+  output$tam_cor_plot <- renderPlot({
+    req(benchmark$tam_cor)
+    x <- benchmark$tam_cor
+    x$mdri <- factor(
+      x$mdri,
+      levels = score_cols,
+      labels = c("MDR injury", "MDR resolution", "MDR APC/IFN", "Injury-resolution axis")
+    )
+    x$tam_signature <- factor(
+      x$tam_signature,
+      levels = c("C1QC_TAM", "SPP1_TAM"),
+      labels = c("C1QC+ TAM", "SPP1+ TAM")
+    )
+    ggplot(x, aes(mdri, tam_signature, fill = rho)) +
+      geom_tile(color = "white", linewidth = 0.35) +
+      geom_text(aes(label = sprintf("%.2f", rho)), size = 3) +
+      scale_fill_gradient2(low = "#2b6cb0", mid = "white", high = "#b2182b", midpoint = 0, limits = c(-1, 1)) +
+      labs(x = NULL, y = NULL, fill = "Spearman rho") +
+      theme_classic(base_size = 9) +
+      theme(axis.text.x = element_text(angle = 35, hjust = 1), axis.line = element_blank(), axis.ticks = element_blank())
+  })
+
+  output$tam_count_plot <- renderPlot({
+    req(benchmark$tam_cox, benchmark$tam_multi)
+    tam <- benchmark$tam_cox |>
+      mutate(class = "Published TAM signatures")
+    mdri <- benchmark$tam_multi |>
+      mutate(class = "MDRi adjusted for TAM and clinical covariates")
+    x <- bind_rows(tam, mdri) |>
+      group_by(class, feature, direction) |>
+      summarise(n_FDR = sum(q_endpoint < 0.05), .groups = "drop") |>
+      mutate(
+        n_plot = ifelse(direction == "Protective", -n_FDR, n_FDR),
+        feature = recode(
+          feature,
+          MDR_injury = "MDR injury",
+          MDR_resolution = "MDR resolution",
+          MDR_apc_ifn = "MDR APC/IFN",
+          MDR_axis = "Injury-resolution axis",
+          C1QC_TAM = "C1QC+ TAM",
+          SPP1_TAM = "SPP1+ TAM"
+        )
+      )
+    ggplot(x, aes(feature, n_plot, fill = direction)) +
+      geom_col(width = 0.68) +
+      coord_flip() +
+      facet_wrap(~class, scales = "free_y", ncol = 1) +
+      geom_hline(yintercept = 0, linewidth = 0.25) +
+      scale_fill_manual(values = c(Adverse = "#b2182b", Protective = "#2b6cb0")) +
+      scale_y_continuous(labels = abs) +
+      labs(x = NULL, y = "Endpoint-FDR significant models", fill = NULL) +
+      theme_classic(base_size = 8) +
+      theme(legend.position = "top", strip.text = element_text(size = 7))
+  })
+
+  output$tam_gene_table <- renderDT({
+    req(benchmark$tam_genes)
+    datatable(benchmark$tam_genes, options = list(pageLength = 10, scrollX = TRUE))
+  })
+
+  output$tam_multi_table <- renderDT({
+    req(benchmark$tam_multi)
+    x <- benchmark$tam_multi
+    x <- x[order(x$q_endpoint, x$p), c("cancer", "endpoint", "feature", "n", "events", "HR", "lower95", "upper95", "p", "q_endpoint", "stage_adjusted"), drop = FALSE]
+    datatable(x, options = list(pageLength = 10, scrollX = TRUE))
+  })
+
   expression_matrix <- eventReactive(input$run_score, {
     if (isTRUE(input$use_example)) {
       mdri_read_expression(file.path(ext_dir, "example_bulk_expression_MDR_genes.tsv"))
     } else {
       req(input$expr_file)
-      path <- input$expr_file$datapath
-      if (grepl("\\.csv$", input$expr_file$name, ignore.case = TRUE)) {
-        tmp <- read.csv(path, check.names = FALSE)
-        tf <- tempfile(fileext = ".tsv")
-        write.table(tmp, tf, sep = "\t", quote = FALSE, row.names = FALSE)
-        mdri_read_expression(tf)
-      } else {
-        mdri_read_expression(path)
-      }
+      mdri_read_input(
+        input$expr_file$datapath,
+        filename = input$expr_file$name,
+        assay = if (nzchar(trimws(input$input_assay))) trimws(input$input_assay) else NULL,
+        layer = if (nzchar(trimws(input$input_layer))) trimws(input$input_layer) else NULL
+      )
     }
   })
 

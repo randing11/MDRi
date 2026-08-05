@@ -13,4 +13,10 @@ Imports:
     DT,
     ggplot2,
     dplyr,
-    survival
+    survival,
+    Matrix
+Suggests:
+    SeuratObject,
+    SummarizedExperiment,
+    SingleCellExperiment,
+    zellkonverter

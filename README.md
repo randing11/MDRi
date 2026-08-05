@@ -24,7 +24,15 @@ Or on the server:
 shiny::runApp("/hwdata/home/longzq/project/Pancan_myeloid/MDRi/inst/shiny")
 ```
 
-## Input Expression Format
+## Input Expression Formats
+
+The Shiny app accepts `.tsv`, `.txt`, `.csv`, `.rds`, and `.h5ad` expression
+inputs. RDS files can contain a matrix, data frame, Seurat object,
+SingleCellExperiment, or SummarizedExperiment. H5AD support requires the
+optional `zellkonverter` package. For Seurat and Bioconductor objects, an assay
+and layer can be supplied in the app; otherwise MDRi Explorer selects the
+default Seurat assay or the first available `logcounts`, `data`, or `counts`
+assay.
 
 Rows are genes and columns are samples.
 
@@ -61,7 +69,8 @@ expression and PanCanAtlas survival tables:
 
 The repository includes pan-cancer benchmark analyses comparing MDRi with
 conventional immune infiltration estimates from TIMER, MCPcounter, xCell,
-CIBERSORT, quanTIseq and EPIC.
+CIBERSORT, quanTIseq and EPIC, together with published C1QC+ and SPP1+ TAM
+signatures.
 
 Included benchmark files:
 
@@ -69,6 +78,10 @@ Included benchmark files:
 - `inst/extdata/benchmark/MDRi_infiltration_panTCGA_univariate_Cox.csv`
 - `inst/extdata/benchmark/MDRi_multivariable_adjusted_for_benchmark_infiltration.csv`
 - `inst/extdata/benchmark/benchmark_summary.txt`
+- `inst/extdata/benchmark/MDRi_published_TAM_signature_global_correlations.tsv`
+- `inst/extdata/benchmark/published_TAM_signature_panTCGA_univariate_Cox.tsv`
+- `inst/extdata/benchmark/MDRi_Cox_adjusted_for_TAM_age_stage_purity_CD8.tsv`
+- `inst/extdata/benchmark/published_TAM_signature_gene_sets.tsv`
 
 The reproducible benchmark workflow is provided in:
 
@@ -88,6 +101,8 @@ the repository lightweight.
 The core functions live in `R/mdri_core.R`:
 
 - `mdri_read_expression()`
+- `mdri_read_input()`
+- `mdri_extract_r_object()`
 - `mdri_score()`
 - `mdri_gene_coverage()`
 - `mdri_read_clinical()`
@@ -99,6 +114,6 @@ The core functions live in `R/mdri_core.R`:
 
 This is an MVP for manuscript packaging and interactive exploration. It includes
 MDRi scoring, TCGA reference visualization, clinical survival analysis, and a
-benchmark module against conventional immune infiltration estimates. A fuller
-methods-paper version can further add external cohort benchmarking, time-dependent
-AUC/C-index comparisons, and published TAM signature collections.
+benchmark module against conventional immune infiltration estimates and published
+TAM signatures. A fuller methods-paper version can further add prospective cohort
+benchmarking and time-dependent AUC/C-index comparisons.
